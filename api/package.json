@@ -1,0 +1,64 @@
+{
+  "name": "telechat-api",
+  "version": "1.0.0",
+  "description": "TeleChat api",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon -- -r esm -r dotenv/config --inspect src/index.js",
+    "start": "cross-env NODE_ENV=production pm2 start src/index.js --watch --no-daemon --node-args=\"-r esm -r dotenv/config\"",
+    "test:unit": "jest -o --projects .",
+    "test:integration": "jest -o --projects ./tests --runInBand",
+    "test": "yarn test:unit && yarn test:integration",
+    "lint": "eslint ./src ./tests --ext .js --fix",
+    "style": "prettier --write *.js",
+    "prepare": "cd .. && husky install api/.husky"
+  },
+  "keywords": [],
+  "author": "Lucas Suares",
+  "license": "GPL",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Suares01/TeleChat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Suares01/TeleChat/issues"
+  },
+  "homepage": "https://github.com/Suares01/TeleChat#readme",
+  "lint-staged": {
+    "*.js": [
+      "yarn lint",
+      "yarn style"
+    ]
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "esm": "^3.2.25",
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "pm2": "^5.2.0",
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.10.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.2",
+    "@commitlint/config-conventional": "^17.0.2",
+    "@eslint/create-config": "^0.2.0",
+    "@swc/core": "^1.2.197",
+    "@swc/jest": "^0.2.21",
+    "@types/jest": "^28.1.1",
+    "@types/supertest": "^2.0.12",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-node": "^0.3.6",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import-helpers": "^1.2.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^8.0.1",
+    "jest": "^28.1.1",
+    "lint-staged": "^13.0.1",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.6.2",
+    "supertest": "^6.2.3"
+  }
+}
