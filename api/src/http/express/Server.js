@@ -1,6 +1,8 @@
 import express from 'express';
 import http from 'http';
 
+import * as database from '../../database/prisma';
+
 export class ExpressServer {
   #app;
 
@@ -9,8 +11,9 @@ export class ExpressServer {
     this.http = http.createServer(this.#app);
   }
 
-  prepare() {
+  async prepare() {
     this.#middlewares();
+    await database.connect();
   }
 
   start() {
@@ -20,7 +23,8 @@ export class ExpressServer {
     );
   }
 
-  close() {
+  async close() {
+    await database.disconnect();
     this.http.close((err) => {
       if (err) throw err;
     });
