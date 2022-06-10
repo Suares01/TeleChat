@@ -1,7 +1,9 @@
+import compression from 'compression';
 import express from 'express';
+import helmet from 'helmet';
 import http from 'http';
 
-import * as database from '../../database/prisma';
+import * as database from '../../../database/prisma';
 
 export class ExpressServer {
   #app;
@@ -31,7 +33,9 @@ export class ExpressServer {
   }
 
   #middlewares() {
+    this.#app.use(helmet());
     this.#app.use(express.json());
     this.#app.use(express.urlencoded({ extended: true }));
+    this.#app.use(compression());
   }
 }
