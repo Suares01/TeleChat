@@ -3,7 +3,7 @@ import express from 'express';
 import helmet from 'helmet';
 import http from 'http';
 
-import * as database from '../../../database/prisma';
+import * as database from '../../database/prisma';
 
 export class ExpressServer {
   #app;
