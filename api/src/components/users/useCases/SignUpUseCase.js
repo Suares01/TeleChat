@@ -1,3 +1,5 @@
+import { Container } from 'typedi';
+
 import { UnauthorizedError } from '../../../shared/errors';
 import { createUser } from '../validations';
 
@@ -5,7 +7,10 @@ export class SignUpUseCase {
   #usersRepository;
   #hashService;
 
-  constructor(usersRepository, hashService) {
+  constructor(
+    usersRepository = Container.get('UsersRepository'),
+    hashService = Container.get('HashService'),
+  ) {
     this.#usersRepository = usersRepository;
     this.#hashService = hashService;
   }
