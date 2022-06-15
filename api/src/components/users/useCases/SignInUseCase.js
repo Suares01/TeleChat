@@ -1,3 +1,5 @@
+import { Container } from 'typedi';
+
 import { UnauthorizedError } from '../../../shared/errors';
 import { authUser } from '../validations';
 
@@ -6,7 +8,11 @@ export class SignInUseCase {
   #hashService;
   #tokenService;
 
-  constructor(usersRepository, hashService, tokenService) {
+  constructor(
+    usersRepository = Container.get('UsersRepository'),
+    hashService = Container.get('HashService'),
+    tokenService = Container.get('TokenService'),
+  ) {
     this.#usersRepository = usersRepository;
     this.#hashService = hashService;
     this.#tokenService = tokenService;
@@ -31,8 +37,9 @@ export class SignInUseCase {
       throw new UnauthorizedError('email or password incorrect');
 
     const { id } = user;
-    const token = this.#tokenService.sign({ user: { id } });
+    const accessToken = this.#tokenService.sign({ email, userId: id });
+    const refreshToken = await this.#tokenService.refreshToken.sign(id);
 
-    return token;
+    return { accessToken, refreshToken };
   }
 }
