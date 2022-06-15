@@ -10,6 +10,9 @@ describe('SignInUseCase', () => {
   };
   const mockedTokenService = {
     sign: jest.fn(),
+    refreshToken: {
+      sign: jest.fn(),
+    },
   };
 
   let signInUseCase;
@@ -22,25 +25,37 @@ describe('SignInUseCase', () => {
   });
 
   const defaultUser = {
+    id: 'ds1f65ds1fd3s51fds65',
     name: 'John Doe',
     username: 'john',
     email: 'doe.10@mail.com',
     password: '123John8',
+    created_at: new Date(),
   };
 
-  it('If the user was registered and the provided password is correct, should return a JWT Token.', async () => {
+  it('If the user was registered and the provided password is correct, should return a JWT Token and a refresh token.', async () => {
     const sampleToken =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJlbWFpbCI6InRlc3RlQG1haWwuY29tIiwiaWF0IjoxNjU1MjU1ODE5LCJleHAiOjE2NTUyNTU4NzksImF1ZCI6IlRlbGVDaGF0LkFQSSIsImlzcyI6ImFwaV91cmwiLCJzdWIiOiIwN2VkY2RiYi05ZWIxLTQyNjYtYjdmNS01NWQ1ZTk1ZTE2NDkifQ.b7gz29FSL0S5a80YblDpbw7GW1snF9QOhFZ44umFMfQ';
+    const sampleRefreshToken =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6InJ0K2p3dCJ9.eyJpYXQiOjE2NTUyNTU3MzIsImV4cCI6MTY1NTI1NTkxMiwiYXVkIjoiVGVsZUNoYXQuQVBJIiwiaXNzIjoiYXBpX3VybCIsInN1YiI6IjA3ZWRjZGJiLTllYjEtNDI2Ni1iN2Y1LTU1ZDVlOTVlMTY0OSJ9.-LPvJkP7Shegm3IXzeO-nChGTx-lRQMG7TTilcIIRV8';
 
     mockedUsersRepository.findOne.mockResolvedValue(defaultUser);
     mockedHashService.compare.mockResolvedValue(true);
-    mockedTokenService.sign.mockResolvedValue(sampleToken);
+    mockedTokenService.sign.mockReturnValue(sampleToken);
+    mockedTokenService.refreshToken.sign.mockResolvedValue(sampleRefreshToken);
 
     const { email, password } = defaultUser;
-    const token = await signInUseCase.execute({ email, password });
+    const auth = await signInUseCase.execute({
+      email,
+      password,
+    });
 
     expect(mockedTokenService.sign).toHaveBeenCalled();
-    expect(token).toBe(sampleToken);
+    expect(mockedTokenService.refreshToken.sign).toHaveBeenCalled();
+    expect(auth).toEqual({
+      accessToken: sampleToken,
+      refreshToken: sampleRefreshToken,
+    });
   });
 
   it("If the user wasn't registered, should throw UnauthorizedError with message: email or password incorrect", async () => {
