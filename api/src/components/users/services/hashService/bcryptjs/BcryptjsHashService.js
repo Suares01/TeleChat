@@ -21,7 +21,7 @@ export class BcryptjsHashService {
   }
 
   /**
-   * Compares the given data against the given hash.
+   * Asynchronously compares the given data against the given hash.
    * @param  value            Data to compare
    * @param  hash             Data to be compared to
    * @return Promise with resulting compare
