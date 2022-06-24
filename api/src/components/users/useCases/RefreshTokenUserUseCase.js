@@ -34,7 +34,7 @@ export class RefreshTokenUserUseCase {
       const userId = payload.sub;
       const user = await this.#usersRepository.findOne({ id: userId });
 
-      return user || null;
+      return user;
     } catch (error) {
       if (error) throw new UnauthorizedError('refresh token is invalid');
     }
