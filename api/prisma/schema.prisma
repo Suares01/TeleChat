@@ -8,24 +8,32 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  username   String   @unique
-  email      String   @unique
-  password   String
-  created_at DateTime @default(now())
+  id          String   @id @default(uuid())
+  phoneNumber String   @unique
+  email       String   @unique
+  password    String
+  createdAt   DateTime @default(now())
 
-  messages Message[]
+  contacts Contact[]
   @@map("users")
+}
+
+model Contact {
+  id          String @id @default(uuid())
+  name        String
+  phoneNumber String
+  userId      String
+
+  user User @relation(fields: [userId], references: [id])
+  @@map("contacts")
 }
 
 model Message {
   id          String   @id @default(uuid())
   content     String
-  sender_id   String
-  receiver_id String
-  created_at  DateTime @default(now())
+  senderId    String
+  receiverId  String
+  emittedDate DateTime @default(now())
 
-  sender User @relation(fields: [sender_id], references: [id])
   @@map("messages")
 }
