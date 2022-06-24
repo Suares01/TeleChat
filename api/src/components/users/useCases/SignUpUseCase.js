@@ -15,8 +15,8 @@ export class SignUpUseCase {
     this.#hashService = hashService;
   }
 
-  async execute({ name, username, email, password }) {
-    const validSchema = createUser({ name, username, password, email });
+  async execute({ email, password, phoneNumber }) {
+    const validSchema = createUser({ email, password, phoneNumber });
 
     if (validSchema.error)
       throw new UnauthorizedError(validSchema.error.message);
@@ -28,19 +28,18 @@ export class SignUpUseCase {
     if (emailAlreadyExists)
       throw new UnauthorizedError(`user with email "${email}" already exists`);
 
-    const usernameAlreadyExists = await this.#usersRepository.findOne({
-      username,
+    const phoneNumberAlreadyExists = await this.#usersRepository.findOne({
+      phoneNumber,
     });
 
-    if (usernameAlreadyExists)
+    if (phoneNumberAlreadyExists)
       throw new UnauthorizedError(
-        `user with username "${username}" already exists`,
+        `user with phone number "${phoneNumber}" already exists`,
       );
 
     const hashedPassword = await this.#hashService.hash(password);
     const user = await this.#usersRepository.create({
-      name,
-      username,
+      phoneNumber,
       email,
       password: hashedPassword,
     });

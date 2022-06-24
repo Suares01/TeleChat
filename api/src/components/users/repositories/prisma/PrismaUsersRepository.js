@@ -1,31 +1,36 @@
 import { prisma } from '../../../../database/prisma';
 
 export class PrismaUsersRepository {
-  #prisma;
+  #model;
 
   constructor() {
-    this.#prisma = prisma;
+    this.#model = prisma.user;
   }
 
-  async create({ name, username, email, password }) {
-    const user = await this.#prisma.user.create({
+  async create({ phoneNumber, email, password }) {
+    const user = await this.#model.create({
       data: {
+        phoneNumber,
         email,
-        name,
         password,
-        username,
+      },
+      include: {
+        contacts: true,
       },
     });
 
     return user;
   }
 
-  async findOne({ id, email, username }) {
-    const user = await this.#prisma.user.findUnique({
+  async findOne({ id, email, phoneNumber }) {
+    const user = await this.#model.findUnique({
       where: {
         ...((id && { id }) ||
           (email && { email }) ||
-          (username && { username })),
+          (phoneNumber && { phoneNumber })),
+      },
+      include: {
+        contacts: true,
       },
     });
 

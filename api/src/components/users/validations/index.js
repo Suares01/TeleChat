@@ -4,8 +4,7 @@ import { password } from './custom.validation';
 
 const createUser = (userObject) => {
   const schema = Joi.object({
-    name: Joi.string().required(),
-    username: Joi.string().required(),
+    phoneNumber: Joi.string().required(),
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
   });
