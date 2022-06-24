@@ -26,8 +26,7 @@ describe('SignInUseCase', () => {
 
   const defaultUser = {
     id: 'ds1f65ds1fd3s51fds65',
-    name: 'John Doe',
-    username: 'john',
+    phoneNumber: '+9999999999999',
     email: 'doe.10@mail.com',
     password: '123John8',
     created_at: new Date(),

@@ -16,16 +16,18 @@ describe('SignUpUseCase', () => {
   });
 
   const defaultUser = {
-    name: 'John Doe',
-    username: 'john',
+    id: 'ds1f65ds1fd3s51fds65',
+    phoneNumber: '+9999999999999',
     email: 'doe.10@mail.com',
     password: '123John8',
+    created_at: new Date(),
   };
 
   it('if the user does not yet exist and all the data provided is correct, should create the user in the database with a encrypted password and return the created user.', async () => {
     mockedUsersRepository.create.mockResolvedValue(defaultUser);
 
-    const user = await signUpUseCase.execute(defaultUser);
+    const { email, password, phoneNumber } = defaultUser;
+    const user = await signUpUseCase.execute({ email, password, phoneNumber });
 
     expect(user).toEqual({
       ...defaultUser,
@@ -38,7 +40,8 @@ describe('SignUpUseCase', () => {
   it('if the user with provided email already exists, should throw UnauthorizedError with message: user with email "provided_email@mail.com" already exists', async () => {
     mockedUsersRepository.findOne.mockResolvedValue(defaultUser);
 
-    const user = signUpUseCase.execute(defaultUser);
+    const { email, password, phoneNumber } = defaultUser;
+    const user = signUpUseCase.execute({ email, password, phoneNumber });
 
     await expect(user).rejects.toBeInstanceOf(UnauthorizedError);
     await expect(user).rejects.toThrow(
@@ -48,17 +51,18 @@ describe('SignUpUseCase', () => {
     );
   });
 
-  it('if the user with provided username already exists, should throw UnauthorizedError with message: user with username "providedUsername" already exists', async () => {
+  it('if the user with provided phoneNumber already exists, should throw UnauthorizedError with message: user with phone number "providedPhoneNumber" already exists', async () => {
     mockedUsersRepository.findOne
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce(defaultUser);
 
-    const user = signUpUseCase.execute(defaultUser);
+    const { email, password, phoneNumber } = defaultUser;
+    const user = signUpUseCase.execute({ email, password, phoneNumber });
 
     await expect(user).rejects.toBeInstanceOf(UnauthorizedError);
     await expect(user).rejects.toThrow(
       new UnauthorizedError(
-        `user with username "${defaultUser.username}" already exists`,
+        `user with phone number "${defaultUser.phoneNumber}" already exists`,
       ),
     );
   });
@@ -68,7 +72,7 @@ describe('SignUpUseCase', () => {
       const incorrectUserSchema = {
         ...defaultUser,
         ...{
-          password: 12345678,
+          phoneNumber: 12345678,
         },
       };
 
@@ -76,7 +80,7 @@ describe('SignUpUseCase', () => {
 
       await expect(user).rejects.toBeInstanceOf(UnauthorizedError);
       await expect(user).rejects.toThrow(
-        new UnauthorizedError('"password" must be a string'),
+        new UnauthorizedError('"phoneNumber" must be a string'),
       );
     });
 
