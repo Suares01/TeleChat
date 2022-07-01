@@ -29,9 +29,6 @@ export class PrismaUsersRepository {
           (email && { email }) ||
           (phoneNumber && { phoneNumber })),
       },
-      include: {
-        contacts: true,
-      },
     });
 
     return user;
