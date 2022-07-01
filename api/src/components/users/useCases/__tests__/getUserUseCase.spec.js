@@ -18,15 +18,6 @@ describe('GetUserUseCase', () => {
       email: 'doe.10@mail.com',
       password: '123John8',
       created_at: new Date(),
-      contacts: [
-        {
-          id: 'uuid',
-          phoneNumber: '+8888888888888',
-          email: 'doe.12@mail.com',
-          password: '123Doe235',
-          created_at: new Date(),
-        },
-      ],
     };
     mockedUsersRepository.findOne.mockResolvedValue(user);
 
