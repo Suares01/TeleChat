@@ -1,4 +1,5 @@
 import compression from 'compression';
+import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import http from 'http';
@@ -36,6 +37,7 @@ export class ExpressServer {
     this.#app.use(helmet());
     this.#app.use(express.json());
     this.#app.use(express.urlencoded({ extended: true }));
+    this.#app.use(cors());
     this.#app.use(compression());
   }
 }
